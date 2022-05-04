@@ -1,3 +1,12 @@
 GET http://localhost:3000/api/pets
 
 ###
+POST http://localhost:3000/api/pets/
+Content-Type: application/json
+
+{
+  "name": "Kalyte",
+  "dob": "2020-01-01",
+  "client_email": "ponia@sune.lt",
+  "archived": 0
+}

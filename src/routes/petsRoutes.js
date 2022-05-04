@@ -52,4 +52,32 @@ petsRoutes.post('/pets', async (req, res) => {
   }
 });
 
+// DELETE /api/posts/:postId - istrina posta kurio id === postId
+petsRoutes.delete('/pets/:petsId', async (req, res) => {
+  // res.json(req.params.postId);
+  let conn;
+  try {
+    const { petsId } = req.params;
+    conn = await mysql.createConnection(dbConfig);
+    const sql = 'UPDATE `pets` SET `archived`= 1 WHERE id = ?';
+    const [deleteRezult] = await conn.execute(sql, [petsId]);
+    if (deleteRezult.affectedRows !== 1) {
+      res
+        .status(400)
+        .json({ success: false, error: `user with id ${petsId}, was not found` });
+      return;
+    }
+    if (deleteRezult.affectedRows === 1) {
+      res.json('delete ok');
+      return;
+    }
+    throw new Error('sometnig wrong in deletepets.affectedRows');
+  } catch (error) {
+    console.log('error DELETE posts', error);
+    res.sendStatus(500);
+  } finally {
+    await conn?.end();
+  }
+});
+
 module.exports = petsRoutes;
